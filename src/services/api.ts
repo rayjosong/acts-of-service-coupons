@@ -1,7 +1,7 @@
 import type { Coupon, RequestHistoryItem } from '../types';
 
-// Base URL for API - in production it's the same domain
-const API_BASE = import.meta.env.PROD ? '' : '';
+// Base URL for API - use localhost in development
+const API_BASE = import.meta.env.PROD ? '' : 'http://localhost:3001';
 
 export async function fetchCoupons(): Promise<Coupon[]> {
   try {
