@@ -22,7 +22,7 @@ export const CouponCard: React.FC<CouponCardProps> = ({ coupon, onRedeem }) => {
         boxShadow: `0 4px 6px -1px rgba(0, 0, 0, 0.1)`
     },
     hover: isFullyRedeemed ? {} : {
-        rotate: [0, 5, -5, 5, -5, 0],
+        rotate: 5,
         scale: 1.05,
         y: -10,
         zIndex: 10,
