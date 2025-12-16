@@ -18,6 +18,7 @@
       "runtime": "nodejs18.x"
     }
   },
+  "devCommand": "npm run dev",
   "headers": [
     {
       "source": "/(.*)",
