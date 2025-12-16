@@ -1,13 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import {
-  ShoppingBag,
-  Star,
-  Tv,
-  Dices,
-  HeartHandshake,
-  History,
-} from 'lucide-react';
+import { History } from 'lucide-react';
 
 import { COLORS } from './types/theme';
 import { Coupon, RequestHistoryItem } from './types';
@@ -18,21 +11,71 @@ import { CouponCard } from './components/coupons/CouponCard';
 import { RedemptionModal } from './components/modals/RedemptionModal';
 import { Confetti } from './components/effects/Confetti';
 import { RequestHistory as RequestHistoryView } from './components/views/RequestHistory';
+import { fetchCoupons, fetchRequestHistory, addRequestHistory } from './services/googleSheets';
 
-const INITIAL_COUPONS: Coupon[] = [
-  { id: 1, title: "Craving Curator", icon: ShoppingBag, desc: "Let's conquer that specific meal craving. Local or otherwise.", maxClaims: 5, currentClaims: 0 },
-  { id: 2, title: "Logistics & Lift", icon: HeartHandshake, desc: "Anything heavy that needs moving or reaching, consider it done.", maxClaims: 5, currentClaims: 0 },
-  { id: 3, title: "Entertainment Hub", icon: Tv, desc: "Full setup: streaming, charging, and ideal viewing height.", maxClaims: 3, currentClaims: 0 },
-  { id: 4, title: "Brain Break Planner", icon: Star, desc: "I'll manually queue up the best movies & playlists for you.", maxClaims: 10, currentClaims: 0 },
-  { id: 5, title: "Wildcard Task", icon: Dices, desc: "Redeem for one random task or distraction I must perform.", maxClaims: 1, currentClaims: 0 },
+// Fallback coupons in case Google Sheets fails
+const FALLBACK_COUPONS: Coupon[] = [
+  {
+    id: 1,
+    title: "Bubble Tea Craving Satisfier",
+    iconName: "coffee",
+    desc: "I'll get you that bubble tea you're craving",
+    maxClaims: 5,
+    currentClaims: 0
+  },
+  {
+    id: 2,
+    title: "Meal Craving Satisfier",
+    iconName: "utensils",
+    desc: "Let me handle your food cravings",
+    maxClaims: 5,
+    currentClaims: 0
+  },
+  {
+    id: 3,
+    title: "Grocery Runner",
+    iconName: "shopping-cart",
+    desc: "Need groceries? I've got you covered",
+    maxClaims: 3,
+    currentClaims: 0
+  },
 ];
 
 const App: React.FC = () => {
-  const [coupons, setCoupons] = useState<Coupon[]>(INITIAL_COUPONS);
+  const [coupons, setCoupons] = useState<Coupon[]>(FALLBACK_COUPONS);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [selectedCoupon, setSelectedCoupon] = useState<Coupon | null>(null);
   const [showConfetti, setShowConfetti] = useState(false);
   const [currentView, setCurrentView] = useState<'coupons' | 'history'>('coupons');
   const [requestHistory, setRequestHistory] = useState<RequestHistoryItem[]>([]);
+
+  // Fetch data from Google Sheets on mount
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        setIsLoading(true);
+        const [fetchedCoupons, fetchedHistory] = await Promise.all([
+          fetchCoupons(),
+          fetchRequestHistory()
+        ]);
+
+        if (fetchedCoupons.length > 0) {
+          setCoupons(fetchedCoupons);
+          setError(null);
+        }
+
+        setRequestHistory(fetchedHistory);
+      } catch (err) {
+        console.error('Failed to fetch data from Google Sheets:', err);
+        setError('Failed to load data from Google Sheets. Using fallback data.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadData();
+  }, []);
 
   const handleRedeemClick = (coupon: Coupon) => {
     if (coupon.currentClaims < coupon.maxClaims) {
@@ -93,6 +136,11 @@ const App: React.FC = () => {
                     <p className="text-lg font-medium mb-4">
                       Let's focus on your recovery and leave the rest to the people around you
                     </p>
+                    {error && (
+                      <div className="mt-2 p-2 rounded-lg bg-yellow-100 border border-yellow-300">
+                        <p className="text-sm text-yellow-800">{error}</p>
+                      </div>
+                    )}
                   </div>
                   <ChibiBear />
                 </div>
@@ -111,16 +159,28 @@ const App: React.FC = () => {
                 </div>
               </header>
 
-              {/* Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 pt-4">
-                {coupons.map((coupon) => (
-                  <CouponCard
-                    key={coupon.id}
-                    coupon={coupon}
-                    onRedeem={handleRedeemClick}
-                  />
-                ))}
-              </div>
+              {/* Loading State */}
+              {isLoading ? (
+                <div className="flex justify-center items-center py-12">
+                  <div className="text-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-300 mx-auto mb-4"></div>
+                    <p className="text-lg font-medium" style={{ color: COLORS.warmGray }}>
+                      Loading coupons...
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                /* Grid */
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 pt-4">
+                  {coupons.map((coupon) => (
+                    <CouponCard
+                      key={coupon.id}
+                      coupon={coupon}
+                      onRedeem={handleRedeemClick}
+                    />
+                  ))}
+                </div>
+              )}
             </motion.div>
           )}
         </AnimatePresence>

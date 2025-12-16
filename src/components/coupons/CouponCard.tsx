@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Coupon } from '../../types';
 import { COLORS } from '../../types/theme';
+import { getIcon } from '../../utils/iconMap';
 
 interface CouponCardProps {
   coupon: Coupon;
@@ -9,7 +10,7 @@ interface CouponCardProps {
 }
 
 export const CouponCard: React.FC<CouponCardProps> = ({ coupon, onRedeem }) => {
-  const Icon = coupon.icon;
+  const Icon = getIcon(coupon.iconName);
   const isFullyRedeemed = coupon.currentClaims >= coupon.maxClaims;
   const progress = (coupon.currentClaims / coupon.maxClaims) * 100;
 
