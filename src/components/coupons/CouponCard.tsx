@@ -27,8 +27,7 @@ export const CouponCard: React.FC<CouponCardProps> = ({ coupon, onRedeem }) => {
         scale: 1.05,
         y: -10,
         zIndex: 10,
-        boxShadow: `0 20px 25px -5px rgba(0, 0, 0, 0.1)`,
-        transition: { type: 'spring', stiffness: 300, damping: 10 }
+        boxShadow: `0 20px 25px -5px rgba(0, 0, 0, 0.1)`
     },
     redeemed: { opacity: 0.6, scale: 0.95, boxShadow: `0 4px 8px -2px ${COLORS.warmGray}80` },
   };
@@ -39,6 +38,7 @@ export const CouponCard: React.FC<CouponCardProps> = ({ coupon, onRedeem }) => {
       initial="initial"
       whileHover="hover"
       animate={isFullyRedeemed ? "redeemed" : "initial"}
+      transition={{ type: 'spring', stiffness: 300, damping: 10 }}
       className={`relative p-5 rounded-[2rem] border-4 border-dashed border-pink-300 transition-all duration-300 ${isFullyRedeemed ? 'cursor-default' : 'cursor-pointer'}`}
       style={{ backgroundColor: COLORS.creamyYellow, color: COLORS.warmGray, transform: 'rotate(2deg)' }}
     >

@@ -1,99 +1,75 @@
-# Google Sheets Setup Guide
+## Google Sheets Setup Guide
 
 ## Overview
 The app uses Google Sheets as a backend for storing:
-- Coupon definitions (read-only with API key)
-- Current claim states (read-only with API key)
-- Request history (requires OAuth2 for write access)
+- Coupon definitions (static data)
+- Current claim states (dynamic counts)
+- Request history (redemption logs)
 
-## Quick Setup (Read-Only)
+## Setup with Service Account (Recommended for Single-User)
 
-If you only need to read from Google Sheets:
+This approach uses a service account for direct API access without OAuth flow.
 
-1. **Create Google Cloud Project**
+### 1. Create Google Cloud Project
    - Go to [Google Cloud Console](https://console.cloud.google.com/)
    - Create a new project
 
-2. **Enable Google Sheets API**
+### 2. Enable Google Sheets API
    - In your project, go to "APIs & Services" > "Library"
    - Search for "Google Sheets API" and enable it
 
-3. **Create API Key**
+### 3. Create Service Account
    - Go to "APIs & Services" > "Credentials"
-   - Click "Create Credentials" > "API Key"
-   - Copy the API key
-
-4. **Create Google Sheet**
-   - Follow the instructions in `google-sheets-data.md`
-   - Make the sheet publicly readable:
-     - Click "Share" button
-     - Under "General access", change to "Anyone with the link"
-     - Set role to "Viewer"
-
-5. **Configure App**
-   - Copy the spreadsheet ID from the URL
-   - Create `.env` file with:
-     ```
-     VITE_GOOGLE_SHEETS_API_KEY=your_api_key_here
-     VITE_GOOGLE_SHEETS_SPREADSHEET_ID=your_spreadsheet_id_here
-     ```
-
-## Advanced Setup (Write Access)
-
-To enable write access for updating claim counts and saving request history:
-
-### Option 1: Service Account (Recommended)
-
-1. **Create Service Account**
-   - Go to Google Cloud Console > "APIs & Services" > "Credentials"
    - Click "Create Credentials" > "Service Account"
    - Give it a name (e.g., "coupon-app-service")
    - Click "Create and Continue"
-   - Skip granting roles (or add "Editor" for easier setup)
+   - Skip granting roles (optional for simplicity)
    - Click "Done"
 
-2. **Create Service Account Key**
+### 4. Create Service Account Key
    - Find your service account in the list
    - Click on it > "Keys" tab
    - "Add Key" > "Create new key"
    - Choose "JSON" and download the key file
 
-3. **Share the Google Sheet**
+### 5. Create Google Sheet
+   - Follow the instructions in `google-sheets-data.md`
+   - Create the three sheets: Coupons, CouponState, RequestHistory
+
+### 6. Share the Google Sheet
    - Open the JSON key file and copy the `client_email`
    - In your Google Sheet, click "Share"
    - Paste the service account email
    - Give it "Editor" access
 
-4. **Update the App** (Requires code changes)
-   - You'll need to update the googleSheets service to use JWT authentication
-   - Store the service account credentials securely (not in frontend)
+### 7. Configure App
+   - Copy the spreadsheet ID from the URL
+   - Create `.env` file with:
+     ```
+     VITE_GOOGLE_SHEETS_SPREADSHEET_ID=your_spreadsheet_id_here
+     VITE_GOOGLE_SERVICE_ACCOUNT_EMAIL=your_service_account@your-project.iam.gserviceaccount.com
+     VITE_GOOGLE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\nYour private key here\n-----END PRIVATE KEY-----"
+     ```
 
-### Option 2: OAuth2 Flow
+## Troubleshooting
 
-1. **Create OAuth Client ID**
-   - Go to Google Cloud Console > "APIs & Services" > "Credentials"
-   - Click "Create Credentials" > "OAuth client ID"
-   - Choose "Web application"
-   - Add your domain to "Authorized JavaScript origins"
-   - Add your redirect URI to "Authorized redirect URIs"
+### JWT Authentication Issues
+- Make sure the private key is properly formatted with \n for line breaks
+- Verify the service account email is correct
+- Check that the Google Sheets API is enabled
+- Ensure the service account has Editor access to the sheet
 
-2. **Implement OAuth2 Flow**
-   - This requires significant backend implementation
-   - Users would need to authenticate with Google
-   - Store refresh tokens securely
+### Testing
+- Click the "Test Connection" button in the app
+- Check browser console for detailed error messages
+- Verify the spreadsheet ID is correct
 
-## Current Limitations
-
-- The current implementation uses API key for read access
-- Write operations are placeholders that require OAuth2 setup
-- For production use, consider:
-  - Implementing a backend server to handle Google Sheets operations
-  - Using a proper database instead of Google Sheets
-  - Adding authentication for users
+### Common Errors
+1. **"invalid_grant"**: Service account doesn't have access to the sheet
+2. **"invalid_client"**: Service account key is invalid or malformed
+3. **"forbidden"**: Sheet doesn't exist or wrong permissions
 
 ## Security Notes
-
-- **Never expose service account keys in frontend code**
-- API keys should be restricted to your domain
-- Consider rate limiting on your Google Sheets
-- Regularly rotate your credentials
+- Service account credentials are stored in the frontend (acceptable for single-user)
+- Keep your .env file private and add it to .gitignore
+- The service account should only have access to this specific Google Sheet

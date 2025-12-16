@@ -11,10 +11,10 @@ import { CouponCard } from './components/coupons/CouponCard';
 import { RedemptionModal } from './components/modals/RedemptionModal';
 import { Confetti } from './components/effects/Confetti';
 import { RequestHistory as RequestHistoryView } from './components/views/RequestHistory';
-import { fetchCoupons, fetchRequestHistory, addRequestHistory } from './services/googleSheets';
+import { fetchCoupons, fetchRequestHistory, addRequestHistory, testVercelBlobConnection, initializeBlobStorage } from './services/vercelBlob';
 import { sendTelegramNotification } from './services/telegram';
 
-// Fallback coupons in case Google Sheets fails
+// Fallback coupons in case Blob storage fails
 const FALLBACK_COUPONS: Coupon[] = [
   {
     id: 1,
@@ -51,11 +51,15 @@ const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<'coupons' | 'history'>('coupons');
   const [requestHistory, setRequestHistory] = useState<RequestHistoryItem[]>([]);
 
-  // Fetch data from Google Sheets on mount
+  // Fetch data from Blob storage on mount
   useEffect(() => {
     const loadData = async () => {
       try {
         setIsLoading(true);
+
+        // Initialize blob storage if needed
+        await initializeBlobStorage();
+
         const [fetchedCoupons, fetchedHistory] = await Promise.all([
           fetchCoupons(),
           fetchRequestHistory()
@@ -68,8 +72,8 @@ const App: React.FC = () => {
 
         setRequestHistory(fetchedHistory);
       } catch (err) {
-        console.error('Failed to fetch data from Google Sheets:', err);
-        setError('Failed to load data from Google Sheets. Using fallback data.');
+        console.error('Failed to fetch data from Blob storage:', err);
+        setError('Failed to load data from Blob storage. Using fallback data.');
       } finally {
         setIsLoading(false);
       }
@@ -98,10 +102,18 @@ const App: React.FC = () => {
     };
     setRequestHistory(prev => [historyItem, ...prev]);
 
-    // Try to save to Google Sheets (non-blocking)
-    addRequestHistory(id, coupon.title, instructions).catch(err => {
-      console.warn('Failed to save to Google Sheets:', err);
+    // Try to save to Blob storage (non-blocking)
+    const saveSuccess = await addRequestHistory(id, coupon.title, instructions).catch(err => {
+      console.error('Failed to save to Blob storage:', err);
+      // Show error to user briefly
+      setError('Failed to save to Blob storage. Please check console.');
+      setTimeout(() => setError(null), 3000);
+      return false;
     });
+
+    if (saveSuccess) {
+      console.log('Successfully saved to Blob storage');
+    }
 
     // Send Telegram notification (non-blocking)
     sendTelegramNotification({
@@ -161,7 +173,23 @@ const App: React.FC = () => {
                 </div>
 
                 <div className="mt-4 flex flex-col sm:flex-row justify-between items-center space-y-3 sm:space-y-0">
-                  <HelperStatusBadge />
+                  <div className="flex items-center space-x-3">
+                    <HelperStatusBadge />
+                    <button
+                      onClick={() => testVercelBlobConnection().then(result => {
+                        if (result) {
+                          console.log('Blob connection successful!');
+                          setError(null);
+                        } else {
+                          setError('Blob connection failed. Check console for details.');
+                        }
+                      })}
+                      className="text-xs px-2 py-1 bg-gray-200 rounded-full"
+                      style={{ color: COLORS.warmGray }}
+                    >
+                      Test Connection
+                    </button>
+                  </div>
                   <motion.button
                     onClick={() => setCurrentView('history')}
                     className="flex items-center py-2 px-4 font-bold rounded-full border-2 transition-colors shadow-md"

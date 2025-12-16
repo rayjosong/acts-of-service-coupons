@@ -10,8 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@vercel/blob": "^2.0.0",
     "dotenv": "^17.2.3",
     "framer-motion": "^12.7.4",
+    "google-auth-library": "^10.5.0",
     "lucide-react": "^0.478.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
