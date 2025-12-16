@@ -88,10 +88,10 @@ const App: React.FC = () => {
                 <div className="flex justify-between items-start">
                   <div>
                     <h1 className="text-3xl sm:text-4xl font-extrabold mb-1">
-                      R&R Station for My Friend! ✨
+                      Claim your service benefits here! 👾👻
                     </h1>
                     <p className="text-lg font-medium mb-4">
-                      Just sit back. I'm on duty for the heavy lifting.
+                      Let's focus on your recovery and leave the rest to the people around you
                     </p>
                   </div>
                   <ChibiBear />
@@ -137,10 +137,6 @@ const App: React.FC = () => {
           {showConfetti && <Confetti />}
         </AnimatePresence>
       </div>
-
-      <footer className="text-center mt-12 text-sm" style={{ color: COLORS.warmGray }}>
-        <p>Built with care by Your Support Team. 2025</p>
-      </footer>
     </div>
   );
 };
