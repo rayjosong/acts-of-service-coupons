@@ -1,0 +1,10 @@
+id,title,description,iconName,maxClaims,category,isActive
+1,Bubble Tea Craving Satisfier,"I'll get you that bubble tea you're craving",coffee,5,food,true
+2,Meal Craving Satisfier,"Let me handle your food cravings",utensils,5,food,true
+3,Grocery Runner,"Need groceries? I've got you covered",shopping-cart,3,errands,true
+4,Heavy Lifting Helper,"Anything heavy that needs moving or reaching",package,2,physical,true
+5,"Just Be There Buddy","Just hanging out and doing our own things",users,10,companionship,true
+6,Movie Buddy,"Movie time! In-person or online streaming",tv,5,entertainment,true
+7,Game Buddy,"Online or board games - your choice!",gamepad-2,5,entertainment,true
+8,Parcel Collector,"Collect your Shopee/Lazada parcels",inbox,10,errands,true
+9,Custom Request,"Have something else in mind?",star,3,custom,true

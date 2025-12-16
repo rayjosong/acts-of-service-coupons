@@ -12,6 +12,7 @@ import { RedemptionModal } from './components/modals/RedemptionModal';
 import { Confetti } from './components/effects/Confetti';
 import { RequestHistory as RequestHistoryView } from './components/views/RequestHistory';
 import { fetchCoupons, fetchRequestHistory, addRequestHistory } from './services/googleSheets';
+import { sendTelegramNotification } from './services/telegram';
 
 // Fallback coupons in case Google Sheets fails
 const FALLBACK_COUPONS: Coupon[] = [
@@ -83,7 +84,7 @@ const App: React.FC = () => {
     }
   };
 
-  const handleConfirmRedemption = (id: number, instructions: string) => {
+  const handleConfirmRedemption = async (id: number, instructions: string) => {
     const coupon = coupons.find(c => c.id === id);
     if (!coupon) return;
 
@@ -97,7 +98,21 @@ const App: React.FC = () => {
     };
     setRequestHistory(prev => [historyItem, ...prev]);
 
-    // Update Claims
+    // Try to save to Google Sheets (non-blocking)
+    addRequestHistory(id, coupon.title, instructions).catch(err => {
+      console.warn('Failed to save to Google Sheets:', err);
+    });
+
+    // Send Telegram notification (non-blocking)
+    sendTelegramNotification({
+      coupon,
+      instructions,
+      timestamp: Date.now()
+    }).catch(err => {
+      console.warn('Failed to send Telegram notification:', err);
+    });
+
+    // Update Claims locally
     setCoupons(prev => prev.map(c =>
       (c.id === id && c.currentClaims < c.maxClaims)
         ? { ...c, currentClaims: c.currentClaims + 1 }
