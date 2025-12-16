@@ -11,8 +11,7 @@ import { CouponCard } from './components/coupons/CouponCard';
 import { RedemptionModal } from './components/modals/RedemptionModal';
 import { Confetti } from './components/effects/Confetti';
 import { RequestHistory as RequestHistoryView } from './components/views/RequestHistory';
-import { fetchCoupons, fetchRequestHistory, addRequestHistory, testVercelBlobConnection, initializeBlobStorage } from './services/vercelBlob';
-import { sendTelegramNotification } from './services/telegram';
+import { fetchCoupons, fetchRequestHistory, addRequestHistory, testApiConnection } from './services/api';
 
 // Fallback coupons in case Blob storage fails
 const FALLBACK_COUPONS: Coupon[] = [
@@ -51,14 +50,11 @@ const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<'coupons' | 'history'>('coupons');
   const [requestHistory, setRequestHistory] = useState<RequestHistoryItem[]>([]);
 
-  // Fetch data from Blob storage on mount
+  // Fetch data from API on mount
   useEffect(() => {
     const loadData = async () => {
       try {
         setIsLoading(true);
-
-        // Initialize blob storage if needed
-        await initializeBlobStorage();
 
         const [fetchedCoupons, fetchedHistory] = await Promise.all([
           fetchCoupons(),
@@ -72,8 +68,8 @@ const App: React.FC = () => {
 
         setRequestHistory(fetchedHistory);
       } catch (err) {
-        console.error('Failed to fetch data from Blob storage:', err);
-        setError('Failed to load data from Blob storage. Using fallback data.');
+        console.error('Failed to fetch data from API:', err);
+        setError('Failed to load data. Using fallback data.');
       } finally {
         setIsLoading(false);
       }
@@ -102,27 +98,18 @@ const App: React.FC = () => {
     };
     setRequestHistory(prev => [historyItem, ...prev]);
 
-    // Try to save to Blob storage (non-blocking)
+    // Try to save to API (non-blocking)
     const saveSuccess = await addRequestHistory(id, coupon.title, instructions).catch(err => {
-      console.error('Failed to save to Blob storage:', err);
+      console.error('Failed to save to API:', err);
       // Show error to user briefly
-      setError('Failed to save to Blob storage. Please check console.');
+      setError('Failed to save. Please check console.');
       setTimeout(() => setError(null), 3000);
       return false;
     });
 
     if (saveSuccess) {
-      console.log('Successfully saved to Blob storage');
+      console.log('Successfully saved to API');
     }
-
-    // Send Telegram notification (non-blocking)
-    sendTelegramNotification({
-      coupon,
-      instructions,
-      timestamp: Date.now()
-    }).catch(err => {
-      console.warn('Failed to send Telegram notification:', err);
-    });
 
     // Update Claims locally
     setCoupons(prev => prev.map(c =>
@@ -176,12 +163,12 @@ const App: React.FC = () => {
                   <div className="flex items-center space-x-3">
                     <HelperStatusBadge />
                     <button
-                      onClick={() => testVercelBlobConnection().then(result => {
+                      onClick={() => testApiConnection().then(result => {
                         if (result) {
-                          console.log('Blob connection successful!');
+                          console.log('API connection successful!');
                           setError(null);
                         } else {
-                          setError('Blob connection failed. Check console for details.');
+                          setError('API connection failed. Check console for details.');
                         }
                       })}
                       className="text-xs px-2 py-1 bg-gray-200 rounded-full"

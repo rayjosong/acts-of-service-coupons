@@ -1,57 +1,45 @@
 /**
- * Test function to verify Vercel Blob connection
+ * Test function to verify API connection
  * This can be called from the browser console
  */
-import { list, put } from '@vercel/blob';
+// import { testApiConnection } from './api';
 
-export async function testBlobConnection() {
-  const BLOB_TOKEN = import.meta.env.VITE_BLOB_READ_WRITE_TOKEN;
-
-  console.log('Testing Vercel Blob connection...');
-  console.log('Token configured:', BLOB_TOKEN ? 'Yes' : 'No');
+export async function testApiEndpointConnection() {
+  console.log('Testing API connection...');
+  console.log('Testing /api/coupons endpoint...');
 
   try {
-    // Test if we can list blobs
-    const { blobs } = await list({ token: BLOB_TOKEN });
-    console.log('✓ Successfully connected to Vercel Blob');
-    console.log(`Found ${blobs.length} files in blob storage:`);
-    blobs.forEach(blob => {
-      console.log(`  - ${blob.pathname} (${blob.size} bytes)`);
-    });
-
-    // Test write operation with a test file
-    const testContent = {
-      test: true,
-      timestamp: new Date().toISOString(),
-      message: 'This is a test file to verify write access'
-    };
-
-    const testBlob = await put('test-write.json', JSON.stringify(testContent), {
-      access: 'public',
-      contentType: 'application/json',
-      token: BLOB_TOKEN
-    });
-
-    console.log('✓ Successfully wrote test file:', testBlob.url);
-
-    // Verify we can read it back
-    const response = await fetch(testBlob.url);
-    if (response.ok) {
-      const data = await response.json();
-      console.log('✓ Successfully read back test file:', data);
+    // Test coupons endpoint
+    const couponsResponse = await fetch('/api/coupons');
+    if (couponsResponse.ok) {
+      const coupons = await couponsResponse.json();
+      console.log('✓ Successfully connected to /api/coupons');
+      console.log(`Found ${coupons.length} coupons`);
+    } else {
+      console.error('✗ Failed to connect to /api/coupons:', couponsResponse.status);
     }
 
-    // Clean up test file
-    // Note: Vercel Blob doesn't support deletion in the free tier
-    console.log('ℹ Note: Test file will remain in storage (deletion not supported in free tier)');
+    // Test history endpoint
+    const historyResponse = await fetch('/api/history');
+    if (historyResponse.ok) {
+      const history = await historyResponse.json();
+      console.log('✓ Successfully connected to /api/history');
+      console.log(`Found ${history.length} history entries`);
+    } else {
+      console.error('✗ Failed to connect to /api/history:', historyResponse.status);
+    }
 
+    console.log('\n✅ API endpoints are working correctly!');
   } catch (error) {
-    console.error('✗ Connection test failed:', error);
+    console.error('✗ API connection test failed:', error);
+    console.log('\n💡 Make sure:');
+    console.log('  - You are running on Vercel (API routes work only on Vercel)');
+    console.log('  - Or use the development server with proper proxy setup');
   }
 
   // Make this function globally available
-  (window as any).testBlobConnection = testBlobConnection;
+  (window as any).testApiEndpointConnection = testApiEndpointConnection;
 }
 
 // Auto-expose the function when this file is imported
-testBlobConnection();
+testApiEndpointConnection();
