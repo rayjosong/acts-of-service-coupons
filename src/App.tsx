@@ -162,20 +162,6 @@ const App: React.FC = () => {
                 <div className="mt-4 flex flex-col sm:flex-row justify-between items-center space-y-3 sm:space-y-0">
                   <div className="flex items-center space-x-3">
                     <HelperStatusBadge />
-                    <button
-                      onClick={() => testApiConnection().then(result => {
-                        if (result) {
-                          console.log('API connection successful!');
-                          setError(null);
-                        } else {
-                          setError('API connection failed. Check console for details.');
-                        }
-                      })}
-                      className="text-xs px-2 py-1 bg-gray-200 rounded-full"
-                      style={{ color: COLORS.warmGray }}
-                    >
-                      Test Connection
-                    </button>
                   </div>
                   <motion.button
                     onClick={() => setCurrentView('history')}

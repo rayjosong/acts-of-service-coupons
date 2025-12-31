@@ -18,12 +18,12 @@ export default async function handler(req, res) {
         id: entry.id,
         couponId: entry.couponId,
         title: entry.title,
-        timestamp: Date.parse(entry.timestamp) / 1000,
+        timestamp: entry.timestamp,
         details: entry.details
       }));
     }
 
-    history.sort((a, b) => b.timestamp - a.timestamp);
+    history.sort((a, b) => Date.parse(b.timestamp) - Date.parse(a.timestamp));
 
     res.status(200).json(history);
   } catch (error) {

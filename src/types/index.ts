@@ -35,11 +35,11 @@ export interface RequestHistoryRecord {
   redeemedBy?: string; // Optional: who redeemed it
 }
 
-// Type used in the app (same as before but with timestamp as number)
+// Type used in the app (timestamp as ISO string)
 export interface RequestHistoryItem {
   id: number;
   couponId: number;
   title: string;
-  timestamp: number;
+  timestamp: string; // ISO string
   details: string;
 }

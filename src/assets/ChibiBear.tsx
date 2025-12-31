@@ -29,6 +29,5 @@ export const ChibiBear: React.FC = () => (
       <line x1="50" y1="30" x2="50" y2="40" stroke="#FF5757" strokeWidth="2" />
       <line x1="60" y1="30" x2="60" y2="40" stroke="#FF5757" strokeWidth="2" />
     </motion.g>
-    <text x="50" y="95" fontSize="16" fill={COLORS.warmGray} textAnchor="middle" style={{ fontFamily: 'Inter, sans-serif' }}>Chibi Helper</text>
   </svg>
 );

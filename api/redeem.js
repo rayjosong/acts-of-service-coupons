@@ -62,18 +62,18 @@ export default async function handler(req, res) {
       })
     ]);
 
-    if (process.env.VITE_TELEGRAM_BOT_TOKEN && process.env.VITE_TELEGRAM_CHAT_ID) {
+    if (process.env.TELEGRAM_BOT_TOKEN && process.env.TELEGRAM_CHAT_ID) {
       try {
         const message = `🎫 Coupon Redeemed!\n\n` +
           `Title: ${title}\n` +
           `Details: ${details || 'No details'}\n` +
           `Time: ${new Date().toLocaleString()}`;
 
-        await fetch(`https://api.telegram.org/bot${process.env.VITE_TELEGRAM_BOT_TOKEN}/sendMessage`, {
+        await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            chat_id: process.env.VITE_TELEGRAM_CHAT_ID,
+            chat_id: process.env.TELEGRAM_CHAT_ID,
             text: message
           })
         });

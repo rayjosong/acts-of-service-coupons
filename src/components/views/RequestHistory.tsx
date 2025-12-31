@@ -10,7 +10,7 @@ interface RequestHistoryProps {
 }
 
 export const RequestHistory: React.FC<RequestHistoryProps> = ({ history, onBack }) => {
-  const sortedHistory = [...history].sort((a, b) => b.timestamp - a.timestamp);
+  // History is already sorted by the API (newest first)
 
   return (
     <motion.div
@@ -35,14 +35,14 @@ export const RequestHistory: React.FC<RequestHistoryProps> = ({ history, onBack 
         </motion.button>
       </div>
 
-      {sortedHistory.length === 0 ? (
+      {history.length === 0 ? (
         <div className="text-center p-10 rounded-xl" style={{ backgroundColor: COLORS.lilac, color: COLORS.warmGray }}>
           <Dices className="w-12 h-12 mx-auto mb-4" />
           <p className="text-lg font-semibold">No requests yet! Redeem a coupon to start.</p>
         </div>
       ) : (
         <div className="space-y-4">
-          {sortedHistory.map((request) => (
+          {history.map((request) => (
             <motion.div
               key={request.id}
               initial={{ opacity: 0, y: 20 }}
@@ -56,7 +56,7 @@ export const RequestHistory: React.FC<RequestHistoryProps> = ({ history, onBack 
                   {request.title}
                 </h3>
                 <span className="text-sm font-semibold whitespace-nowrap">
-                  {new Date(request.timestamp).toLocaleDateString()}
+                  {new Date(request.timestamp).toLocaleString()}
                 </span>
               </div>
               <p className="text-sm font-bold mb-1">Details:</p>
