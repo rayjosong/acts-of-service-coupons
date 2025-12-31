@@ -124,7 +124,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="gingham-bg min-h-screen p-4 sm:p-8">
+    <div className="min-h-screen p-4 gingham-bg sm:p-8">
       <GinghamBackground />
       <div className="max-w-4xl mx-auto">
         <AnimatePresence mode="wait">
@@ -142,16 +142,16 @@ const App: React.FC = () => {
                 className="relative mb-8 p-6 shadow-xl shadow-pink-300/80 rounded-[2rem] border-4 border-dashed border-pink-300"
                 style={{ backgroundColor: COLORS.lilac, color: COLORS.warmGray }}
               >
-                <div className="flex justify-between items-start">
+                <div className="flex items-start justify-between">
                   <div>
-                    <h1 className="text-3xl sm:text-4xl font-extrabold mb-1">
-                      Claim your service benefits here! 👾👻
+                    <h1 className="mb-1 text-3xl font-extrabold sm:text-4xl">
+                      enjoy your benefits while they're valid 👾👻😛🦦
                     </h1>
-                    <p className="text-lg font-medium mb-4">
-                      Let's focus on your recovery and leave the rest to the people around you
+                    <p className="mb-4 text-lg font-medium">
+                      even if you're better now and can move about, it's good to minimise excessive moving and leave laborious tasks to the people around you hehe
                     </p>
                     {error && (
-                      <div className="mt-2 p-2 rounded-lg bg-yellow-100 border border-yellow-300">
+                      <div className="p-2 mt-2 bg-yellow-100 border border-yellow-300 rounded-lg">
                         <p className="text-sm text-yellow-800">{error}</p>
                       </div>
                     )}
@@ -159,13 +159,13 @@ const App: React.FC = () => {
                   <ChibiBear />
                 </div>
 
-                <div className="mt-4 flex flex-col sm:flex-row justify-between items-center space-y-3 sm:space-y-0">
+                <div className="flex flex-col items-center justify-between mt-4 space-y-3 sm:flex-row sm:space-y-0">
                   <div className="flex items-center space-x-3">
                     <HelperStatusBadge />
                   </div>
                   <motion.button
                     onClick={() => setCurrentView('history')}
-                    className="flex items-center py-2 px-4 font-bold rounded-full border-2 transition-colors shadow-md"
+                    className="flex items-center px-4 py-2 font-bold transition-colors border-2 rounded-full shadow-md"
                     style={{ backgroundColor: COLORS.mintGreen, borderColor: COLORS.warmGray, color: COLORS.warmGray }}
                     whileTap={{ scale: 0.95 }}
                   >
@@ -177,9 +177,9 @@ const App: React.FC = () => {
 
               {/* Loading State */}
               {isLoading ? (
-                <div className="flex justify-center items-center py-12">
+                <div className="flex items-center justify-center py-12">
                   <div className="text-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-300 mx-auto mb-4"></div>
+                    <div className="w-12 h-12 mx-auto mb-4 border-b-2 border-pink-300 rounded-full animate-spin"></div>
                     <p className="text-lg font-medium" style={{ color: COLORS.warmGray }}>
                       Loading coupons...
                     </p>
@@ -187,7 +187,7 @@ const App: React.FC = () => {
                 </div>
               ) : (
                 /* Grid */
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 pt-4">
+                <div className="grid grid-cols-1 gap-8 pt-4 sm:grid-cols-2">
                   {coupons.map((coupon) => (
                     <CouponCard
                       key={coupon.id}

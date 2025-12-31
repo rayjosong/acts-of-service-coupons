@@ -1,0 +1,83 @@
+[
+  {
+    "id": 1,
+    "title": "bubble tea craving satisfier",
+    "description": "i'll get you your bbtea, 0% sugar cos i know you'll defo be thinking about it being fat",
+    "iconName": "coffee",
+    "maxClaims": 20,
+    "category": "food",
+    "isActive": true
+  },
+  {
+    "id": 2,
+    "title": "meal craving satisfier",
+    "description": "i'll handle handle your food cravings",
+    "iconName": "utensils",
+    "maxClaims": 20,
+    "category": "food",
+    "isActive": true
+  },
+  {
+    "id": 3,
+    "title": "grocery runner",
+    "description": "need groceries? i've got you covered",
+    "iconName": "shopping-cart",
+    "maxClaims": 20,
+    "category": "service",
+    "isActive": true
+  },
+  {
+    "id": 4,
+    "title": "heavy lifting helper",
+    "description": "plsplspls don't carry heavy stuff till you're fully recovered, i'll do it for you, you can be independent again once you're fully recovered yenno",
+    "iconName": "package",
+    "maxClaims": 20,
+    "category": "service",
+    "isActive": true
+  },
+  {
+    "id": 5,
+    "title": "just be there buddy",
+    "description": "j hanging out and doing our own things",
+    "iconName": "users",
+    "maxClaims": 20,
+    "category": "company",
+    "isActive": true
+  },
+  {
+    "id": 6,
+    "title": "movie buddy",
+    "description": "not necessarily movie, tom n jerry also can hurhur",
+    "iconName": "tv",
+    "maxClaims": 20,
+    "category": "entertainment",
+    "isActive": true
+  },
+  {
+    "id": 7,
+    "title": "game buddy",
+    "description": "online or boardgames also can",
+    "iconName": "gamepad-2",
+    "maxClaims": 20,
+    "category": "entertainment",
+    "isActive": true
+  },
+  {
+    "id": 8,
+    "title": "parcel collector",
+    "description": "collect your Shopee/Lazada parcels",
+    "iconName": "inbox",
+    "maxClaims": 20,
+    "category": "service",
+    "isActive": true
+  },
+  {
+    "id": 9,
+    "title": "custom request",
+    "description": "Have something else in mind?",
+    "iconName": "star",
+    "maxClaims": 5,
+    "category": "custom",
+    "isActive": true
+  }
+]

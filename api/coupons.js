@@ -1,105 +1,106 @@
-import { list } from '@vercel/blob';
+import { list } from "@vercel/blob";
 
 const DEFAULT_COUPONS = [
   {
     id: 1,
     title: "Bubble Tea Craving Satisfier",
-    description: "I'll get you that bubble tea you're craving",
+    description:
+      "i'll get you your bbtea, 0% sugar cos i know you'll defo be thinking about it being fat",
     iconName: "coffee",
-    maxClaims: 5,
+    maxClaims: 20,
     category: "food",
-    isActive: true
+    isActive: true,
   },
   {
     id: 2,
     title: "Late Night Food Run",
-    description: "When you're hungry and everything's closed, I got you",
+    description: "got your back",
     iconName: "utensils",
-    maxClaims: 3,
+    maxClaims: 20,
     category: "food",
-    isActive: true
+    isActive: true,
   },
   {
     id: 3,
     title: "Shoulder Massage Session",
-    description: "15 minutes of stress relief for those tense shoulders",
+    description: "relieve those tense shoulders",
     iconName: "heart",
     maxClaims: 10,
     category: "service",
-    isActive: true
+    isActive: true,
   },
   {
     id: 4,
     title: "Errand Runner",
-    description: "I'll run that errand you've been procrastinating on",
+    description: "don't walk too much, just ask me to do it for you",
     iconName: "package",
-    maxClaims: 7,
+    maxClaims: 20,
     category: "service",
-    isActive: true
+    isActive: true,
   },
   {
     id: 5,
     title: "Listening Ear",
-    description: "30 minutes of uninterrupted listening about anything",
+    description: "here to let you yap or vent about anything",
     iconName: "message-circle",
     maxClaims: 20,
     category: "service",
-    isActive: true
+    isActive: true,
   },
   {
     id: 6,
     title: "Movie Night Companion",
-    description: "I'll watch that movie you want to see with you",
+    description: "tom n jerry also can hehe",
     iconName: "film",
-    maxClaims: 4,
+    maxClaims: 10,
     category: "entertainment",
-    isActive: true
+    isActive: true,
   },
   {
     id: 7,
     title: "Study Buddy",
-    description: "2 hours of focused study session together",
+    description: "just study together, no need talk also can",
     iconName: "book-open",
-    maxClaims: 8,
+    maxClaims: 10,
     category: "study",
-    isActive: true
+    isActive: true,
   },
   {
     id: 8,
     title: "Breakfast in Bed",
-    description: "Surprise morning meal delivered to your bed",
+    description: "breakfast delivered to your bed???",
     iconName: "sunrise",
-    maxClaims: 3,
+    maxClaims: 10,
     category: "food",
-    isActive: true
+    isActive: true,
   },
   {
     id: 9,
     title: "Tech Support",
-    description: "I'll help fix your tech issues for 1 hour",
+    description: "i'll help fix your tech issues hurhur",
     iconName: "laptop",
     maxClaims: 5,
     category: "service",
-    isActive: true
-  }
+    isActive: true,
+  },
 ];
 
 export default async function handler(req, res) {
-  if (req.method !== 'GET') {
-    return res.status(405).json({ error: 'Method not allowed' });
+  if (req.method !== "GET") {
+    return res.status(405).json({ error: "Method not allowed" });
   }
 
   try {
     const { blobs } = await list();
-    const couponsBlob = blobs.find(b => b.pathname === 'coupons.json');
-    const statesBlob = blobs.find(b => b.pathname === 'coupon-state.json');
+    const couponsBlob = blobs.find((b) => b.pathname === "coupons.json");
+    const statesBlob = blobs.find((b) => b.pathname === "coupon-state.json");
 
     let coupons = [];
 
     if (couponsBlob && statesBlob) {
       const [couponsData, statesData] = await Promise.all([
-        fetch(couponsBlob.url).then(r => r.json()),
-        fetch(statesBlob.url).then(r => r.json())
+        fetch(couponsBlob.url).then((r) => r.json()),
+        fetch(statesBlob.url).then((r) => r.json()),
       ]);
 
       coupons = couponsData.map((coupon) => {
@@ -110,31 +111,31 @@ export default async function handler(req, res) {
           desc: coupon.description,
           iconName: coupon.iconName,
           maxClaims: coupon.maxClaims,
-          currentClaims: state?.currentClaims || 0
+          currentClaims: state?.currentClaims || 0,
         };
       });
     } else {
-      coupons = DEFAULT_COUPONS.map(coupon => ({
+      coupons = DEFAULT_COUPONS.map((coupon) => ({
         id: coupon.id,
         title: coupon.title,
         desc: coupon.description,
         iconName: coupon.iconName,
         maxClaims: coupon.maxClaims,
-        currentClaims: 0
+        currentClaims: 0,
       }));
     }
 
     res.status(200).json(coupons);
   } catch (error) {
-    console.error('Error fetching coupons:', error);
+    console.error("Error fetching coupons:", error);
 
-    const fallbackCoupons = DEFAULT_COUPONS.map(coupon => ({
+    const fallbackCoupons = DEFAULT_COUPONS.map((coupon) => ({
       id: coupon.id,
       title: coupon.title,
       desc: coupon.description,
       iconName: coupon.iconName,
       maxClaims: coupon.maxClaims,
-      currentClaims: 0
+      currentClaims: 0,
     }));
 
     res.status(200).json(fallbackCoupons);

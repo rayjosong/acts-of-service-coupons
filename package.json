@@ -8,7 +8,9 @@
     "dev:vercel": "vercel dev --yes",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "sync:coupons": "node scripts/sync-coupons.js",
+    "reset:data": "node scripts/reset-data.js"
   },
   "dependencies": {
     "@vercel/analytics": "^1.6.1",
