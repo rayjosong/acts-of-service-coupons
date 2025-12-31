@@ -148,7 +148,7 @@ const App: React.FC = () => {
                       enjoy your benefits while they're valid 👾👻😛🦦
                     </h1>
                     <p className="mb-4 text-lg font-medium">
-                      even if you're better now and can move about, it's good to minimise excessive moving and leave laborious tasks to the people around you hehe
+                      even if you're better now and can move about, it's good to minimise excessive moving and leave laborious tasks to the people around you hehe. you can be independent again when you're fully recovered ok!
                     </p>
                     {error && (
                       <div className="p-2 mt-2 bg-yellow-100 border border-yellow-300 rounded-lg">
