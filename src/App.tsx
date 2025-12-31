@@ -11,7 +11,7 @@ import { CouponCard } from './components/coupons/CouponCard';
 import { RedemptionModal } from './components/modals/RedemptionModal';
 import { Confetti } from './components/effects/Confetti';
 import { RequestHistory as RequestHistoryView } from './components/views/RequestHistory';
-import { fetchCoupons, fetchRequestHistory, addRequestHistory, testApiConnection } from './services/api';
+import { fetchCoupons, fetchRequestHistory, addRequestHistory } from './services/api';
 
 // Fallback coupons in case Blob storage fails
 const FALLBACK_COUPONS: Coupon[] = [
@@ -93,7 +93,7 @@ const App: React.FC = () => {
       id: Date.now(),
       couponId: id,
       title: coupon.title,
-      timestamp: Date.now(),
+      timestamp: new Date().toISOString(),
       details: instructions,
     };
     setRequestHistory(prev => [historyItem, ...prev]);
