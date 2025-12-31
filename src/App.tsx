@@ -142,16 +142,16 @@ const App: React.FC = () => {
                 className="relative mb-8 p-6 shadow-xl shadow-pink-300/80 rounded-[2rem] border-4 border-dashed border-pink-300"
                 style={{ backgroundColor: COLORS.lilac, color: COLORS.warmGray }}
               >
-                <div className="flex items-start justify-between">
-                  <div>
-                    <h1 className="mb-1 text-3xl font-extrabold sm:text-4xl">
-                      enjoy your benefits while they're valid 👾👻😛🦦
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex-1 pr-24">
+                    <h1 className="mb-3 text-3xl font-extrabold leading-tight sm:text-4xl">
+                      enjoy your benefits while they're valid 👾👻
                     </h1>
-                    <p className="mb-4 text-lg font-medium">
+                    <p className="mb-5 text-lg font-medium leading-relaxed">
                       even if you're better now and can move about, it's good to minimise excessive moving and leave laborious tasks to the people around you hehe. you can be independent again when you're fully recovered ok!
                     </p>
                     {error && (
-                      <div className="p-2 mt-2 bg-yellow-100 border border-yellow-300 rounded-lg">
+                      <div className="p-3 mt-2 bg-yellow-100 border border-yellow-300 rounded-lg">
                         <p className="text-sm text-yellow-800">{error}</p>
                       </div>
                     )}
@@ -159,17 +159,17 @@ const App: React.FC = () => {
                   <ChibiBear />
                 </div>
 
-                <div className="flex flex-col items-center justify-between mt-4 space-y-3 sm:flex-row sm:space-y-0">
+                <div className="flex flex-col items-center justify-between mt-5 space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4">
                   <div className="flex items-center space-x-3">
                     <HelperStatusBadge />
                   </div>
                   <motion.button
                     onClick={() => setCurrentView('history')}
-                    className="flex items-center px-4 py-2 font-bold transition-colors border-2 rounded-full shadow-md"
+                    className="flex items-center px-5 py-2.5 font-bold transition-colors border-2 rounded-full shadow-md"
                     style={{ backgroundColor: COLORS.mintGreen, borderColor: COLORS.warmGray, color: COLORS.warmGray }}
                     whileTap={{ scale: 0.95 }}
                   >
-                    <History className="w-5 h-5 mr-1" />
+                    <History className="w-5 h-5 mr-2" />
                     History ({requestHistory.length})
                   </motion.button>
                 </div>

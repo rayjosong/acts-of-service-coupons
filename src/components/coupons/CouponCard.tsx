@@ -65,13 +65,13 @@ export const CouponCard: React.FC<CouponCardProps> = ({ coupon, onRedeem }) => {
       </div>
 
       {isFullyRedeemed ? (
-        <div className="w-full py-3 font-bold rounded-full text-center opacity-70 border-2 border-gray-300 bg-gray-100">
+        <div className="w-full py-3 px-6 font-bold rounded-full text-center opacity-70 border-2 border-gray-300 bg-gray-100">
           Fully Redeemed 🚫
         </div>
       ) : (
         <motion.button
           onClick={() => onRedeem(coupon)}
-          className="coupon-button w-full py-3 font-bold rounded-full transition-colors"
+          className="coupon-button w-full py-3 px-6 font-bold rounded-full transition-colors shadow-md"
           style={{ backgroundColor: COLORS.pinkBubblegum, color: COLORS.warmGray }}
           whileTap={{ scale: 0.95 }}
         >

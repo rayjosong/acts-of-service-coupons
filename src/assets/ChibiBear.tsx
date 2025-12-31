@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { COLORS } from '../types/theme';
 
 export const ChibiBear: React.FC = () => (
-  <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="absolute top-0 right-0 z-20 pointer-events-none">
+  <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="absolute -top-2 -right-2 z-20 pointer-events-none sm:top-0 sm:right-0">
     <motion.g
       initial={{ y: 0 }}
       animate={{ y: [0, -10, 0] }}
