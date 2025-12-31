@@ -1,7 +1,6 @@
 import { list } from '@vercel/blob';
-import type { RequestHistoryItem } from '../src/types';
 
-export default async function handler(req: any, res: any) {
+export default async function handler(req, res) {
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
@@ -10,12 +9,12 @@ export default async function handler(req: any, res: any) {
     const { blobs } = await list();
     const historyBlob = blobs.find(b => b.pathname === 'request-history.json');
 
-    let history: RequestHistoryItem[] = [];
+    let history = [];
 
     if (historyBlob) {
       const historyData = await fetch(historyBlob.url).then(r => r.json());
 
-      history = historyData.map((entry: any) => ({
+      history = historyData.map((entry) => ({
         id: entry.id,
         couponId: entry.couponId,
         title: entry.title,

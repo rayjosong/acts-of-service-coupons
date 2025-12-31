@@ -1,7 +1,6 @@
 import { list } from '@vercel/blob';
-import type { Coupon, CouponDefinition, CouponState } from '../src/types';
 
-const DEFAULT_COUPONS: CouponDefinition[] = [
+const DEFAULT_COUPONS = [
   {
     id: 1,
     title: "Bubble Tea Craving Satisfier",
@@ -85,7 +84,7 @@ const DEFAULT_COUPONS: CouponDefinition[] = [
   }
 ];
 
-export default async function handler(req: any, res: any) {
+export default async function handler(req, res) {
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
@@ -95,7 +94,7 @@ export default async function handler(req: any, res: any) {
     const couponsBlob = blobs.find(b => b.pathname === 'coupons.json');
     const statesBlob = blobs.find(b => b.pathname === 'coupon-state.json');
 
-    let coupons: Coupon[] = [];
+    let coupons = [];
 
     if (couponsBlob && statesBlob) {
       const [couponsData, statesData] = await Promise.all([
@@ -103,8 +102,8 @@ export default async function handler(req: any, res: any) {
         fetch(statesBlob.url).then(r => r.json())
       ]);
 
-      coupons = couponsData.map((coupon: CouponDefinition) => {
-        const state = statesData.find((s: CouponState) => s.couponId === coupon.id);
+      coupons = couponsData.map((coupon) => {
+        const state = statesData.find((s) => s.couponId === coupon.id);
         return {
           id: coupon.id,
           title: coupon.title,

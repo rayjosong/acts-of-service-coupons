@@ -1,6 +1,6 @@
 import { list, put } from '@vercel/blob';
 
-export default async function handler(req: any, res: any) {
+export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
@@ -37,7 +37,7 @@ export default async function handler(req: any, res: any) {
 
     const updatedHistory = [...currentHistory, newEntry];
 
-    const stateIndex = currentState.findIndex((s: any) => s.couponId === couponId);
+    const stateIndex = currentState.findIndex((s) => s.couponId === couponId);
     if (stateIndex >= 0) {
       currentState[stateIndex].currentClaims++;
       currentState[stateIndex].lastUpdated = new Date().toISOString();
