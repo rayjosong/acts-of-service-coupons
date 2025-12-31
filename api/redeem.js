@@ -12,20 +12,27 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Missing required fields: couponId, title' });
     }
 
+    console.log('Step 1: Listing blobs...');
     const { blobs } = await list();
+    console.log('Step 1 complete. Blobs found:', blobs.map(b => b.pathname).join(', '));
+
     const historyBlob = blobs.find(b => b.pathname === 'request-history.json');
     const statesBlob = blobs.find(b => b.pathname === 'coupon-state.json');
 
+    console.log('Step 2: Fetching existing data...');
     let currentHistory = [];
     let currentState = [];
 
     if (historyBlob) {
+      console.log('Fetching history from:', historyBlob.url);
       currentHistory = await fetch(historyBlob.url).then(r => r.json());
     }
 
     if (statesBlob) {
+      console.log('Fetching state from:', statesBlob.url);
       currentState = await fetch(statesBlob.url).then(r => r.json());
     }
+    console.log('Step 2 complete. History:', currentHistory.length, 'State:', currentState.length);
 
     const newEntry = {
       id: Date.now(),
@@ -49,6 +56,7 @@ export default async function handler(req, res) {
       });
     }
 
+    console.log('Step 3: Uploading updated data...');
     await Promise.all([
       put('request-history.json', JSON.stringify(updatedHistory, null, 2), {
         access: 'public',
@@ -59,8 +67,7 @@ export default async function handler(req, res) {
         contentType: 'application/json'
       })
     ]);
-
-    console.log('Request history updated successfully');
+    console.log('Step 3 complete. Upload successful.');
 
     if (process.env.VITE_TELEGRAM_BOT_TOKEN && process.env.VITE_TELEGRAM_CHAT_ID) {
       try {
@@ -85,6 +92,15 @@ export default async function handler(req, res) {
     res.status(200).json({ success: true, message: 'Coupon redeemed successfully' });
   } catch (error) {
     console.error('Error redeeming coupon:', error);
-    res.status(500).json({ error: 'Failed to redeem coupon' });
+    console.error('Error details:', {
+      message: error.message,
+      stack: error.stack,
+      name: error.name
+    });
+    res.status(500).json({
+      error: 'Failed to redeem coupon',
+      details: error.message,
+      name: error.name
+    });
   }
 }
