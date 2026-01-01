@@ -22,7 +22,7 @@ export const RequestHistory: React.FC<RequestHistoryProps> = ({ history, onBack 
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-3xl sm:text-4xl font-extrabold" style={{ color: COLORS.warmGray }}>
           <History className="w-8 h-8 mr-3 inline-block" />
-          Request History
+          request history
         </h1>
         <motion.button
           onClick={onBack}
@@ -31,14 +31,14 @@ export const RequestHistory: React.FC<RequestHistoryProps> = ({ history, onBack 
           whileTap={{ scale: 0.95 }}
         >
           <ChevronLeft className="w-5 h-5 mr-1" />
-          Back
+          back
         </motion.button>
       </div>
 
       {history.length === 0 ? (
         <div className="text-center p-10 rounded-xl" style={{ backgroundColor: COLORS.lilac, color: COLORS.warmGray }}>
           <Dices className="w-12 h-12 mx-auto mb-4" />
-          <p className="text-lg font-semibold">No requests yet! Redeem a coupon to start.</p>
+          <p className="text-lg font-semibold">no requests yet! redeem a coupon to start.</p>
         </div>
       ) : (
         <div className="space-y-4">
@@ -59,9 +59,9 @@ export const RequestHistory: React.FC<RequestHistoryProps> = ({ history, onBack 
                   {new Date(request.timestamp).toLocaleString()}
                 </span>
               </div>
-              <p className="text-sm font-bold mb-1">Details:</p>
+              <p className="text-sm font-bold mb-1">details:</p>
               <div className="text-xs p-3 rounded-lg bg-white/50">
-                <p className="whitespace-pre-wrap font-sans">{request.details || "No special instructions."}</p>
+                <p className="whitespace-pre-wrap font-sans">{request.details || "no special instructions."}</p>
               </div>
             </motion.div>
           ))}

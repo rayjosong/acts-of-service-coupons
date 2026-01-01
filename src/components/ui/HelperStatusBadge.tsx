@@ -11,6 +11,6 @@ export const HelperStatusBadge: React.FC = () => (
     style={{ backgroundColor: COLORS.mintGreen, color: COLORS.warmGray, borderRadius: '9999px', border: `3px solid ${COLORS.warmGray}` }}
   >
     <HeartHandshake className="w-6 h-6 mr-2" />
-    <span className="text-sm sm:text-base">Helper Status: On Duty! 🛡️</span>
+    <span className="text-sm sm:text-base">helper status: on duty! 🛡️</span>
   </motion.div>
 );

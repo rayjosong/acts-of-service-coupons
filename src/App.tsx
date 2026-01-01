@@ -49,6 +49,7 @@ const App: React.FC = () => {
   const [showConfetti, setShowConfetti] = useState(false);
   const [currentView, setCurrentView] = useState<'coupons' | 'history'>('coupons');
   const [requestHistory, setRequestHistory] = useState<RequestHistoryItem[]>([]);
+  const [isRedeeming, setIsRedeeming] = useState(false);
 
   // Fetch data from API on mount
   useEffect(() => {
@@ -69,7 +70,7 @@ const App: React.FC = () => {
         setRequestHistory(fetchedHistory);
       } catch (err) {
         console.error('Failed to fetch data from API:', err);
-        setError('Failed to load data. Using fallback data.');
+        setError('failed to load data. using fallback data.');
       } finally {
         setIsLoading(false);
       }
@@ -85,42 +86,49 @@ const App: React.FC = () => {
   };
 
   const handleConfirmRedemption = async (id: number, instructions: string) => {
-    const coupon = coupons.find(c => c.id === id);
-    if (!coupon) return;
+    if (isRedeeming) return;
+    setIsRedeeming(true);
 
-    // Log History
-    const historyItem: RequestHistoryItem = {
-      id: Date.now(),
-      couponId: id,
-      title: coupon.title,
-      timestamp: new Date().toISOString(),
-      details: instructions,
-    };
-    setRequestHistory(prev => [historyItem, ...prev]);
+    try {
+      const coupon = coupons.find(c => c.id === id);
+      if (!coupon) return;
 
-    // Try to save to API (non-blocking)
-    const saveSuccess = await addRequestHistory(id, coupon.title, instructions).catch(err => {
-      console.error('Failed to save to API:', err);
-      // Show error to user briefly
-      setError('Failed to save. Please check console.');
-      setTimeout(() => setError(null), 3000);
-      return false;
-    });
+      // Log History
+      const historyItem: RequestHistoryItem = {
+        id: Date.now(),
+        couponId: id,
+        title: coupon.title,
+        timestamp: new Date().toISOString(),
+        details: instructions,
+      };
+      setRequestHistory(prev => [historyItem, ...prev]);
 
-    if (saveSuccess) {
-      console.log('Successfully saved to API');
+      // Try to save to API (non-blocking)
+      const saveSuccess = await addRequestHistory(id, coupon.title, instructions).catch(err => {
+        console.error('Failed to save to API:', err);
+        // Show error to user briefly
+        setError('failed to save. please check console.');
+        setTimeout(() => setError(null), 3000);
+        return false;
+      });
+
+      if (saveSuccess) {
+        console.log('Successfully saved to API');
+      }
+
+      // Update Claims locally
+      setCoupons(prev => prev.map(c =>
+        (c.id === id && c.currentClaims < c.maxClaims)
+          ? { ...c, currentClaims: c.currentClaims + 1 }
+          : c
+      ));
+
+      setSelectedCoupon(null);
+      setShowConfetti(true);
+      setTimeout(() => setShowConfetti(false), 1500);
+    } finally {
+      setIsRedeeming(false);
     }
-
-    // Update Claims locally
-    setCoupons(prev => prev.map(c =>
-      (c.id === id && c.currentClaims < c.maxClaims)
-        ? { ...c, currentClaims: c.currentClaims + 1 }
-        : c
-    ));
-
-    setSelectedCoupon(null);
-    setShowConfetti(true);
-    setTimeout(() => setShowConfetti(false), 1500);
   };
 
   return (
@@ -170,7 +178,7 @@ const App: React.FC = () => {
                     whileTap={{ scale: 0.95 }}
                   >
                     <History className="w-5 h-5 mr-2" />
-                    History ({requestHistory.length})
+                    history ({requestHistory.length})
                   </motion.button>
                 </div>
               </header>
@@ -181,7 +189,7 @@ const App: React.FC = () => {
                   <div className="text-center">
                     <div className="w-12 h-12 mx-auto mb-4 border-b-2 border-pink-300 rounded-full animate-spin"></div>
                     <p className="text-lg font-medium" style={{ color: COLORS.warmGray }}>
-                      Loading coupons...
+                      loading coupons...
                     </p>
                   </div>
                 </div>
@@ -208,6 +216,7 @@ const App: React.FC = () => {
               coupon={selectedCoupon}
               onClose={() => setSelectedCoupon(null)}
               onConfirm={handleConfirmRedemption}
+              isRedeeming={isRedeeming}
             />
           )}
           {showConfetti && <Confetti />}

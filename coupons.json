@@ -11,7 +11,7 @@
   {
     "id": 2,
     "title": "meal craving satisfier",
-    "description": "i'll handle handle your food cravings",
+    "description": "i'll handle your food cravings, just tell me, doesn't matter how far it is",
     "iconName": "utensils",
     "maxClaims": 20,
     "category": "food",
@@ -20,7 +20,7 @@
   {
     "id": 3,
     "title": "grocery runner",
-    "description": "need groceries? i've got you covered",
+    "description": "need groceries? i've got you covered. chicken breast, bread, ice cream, yogurt, protein bars, what else hurhur",
     "iconName": "shopping-cart",
     "maxClaims": 20,
     "category": "service",
@@ -76,7 +76,7 @@
     "title": "custom request",
     "description": "Have something else in mind?",
     "iconName": "star",
-    "maxClaims": 5,
+    "maxClaims": 100,
     "category": "custom",
     "isActive": true
   }

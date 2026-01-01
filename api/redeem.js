@@ -64,10 +64,10 @@ export default async function handler(req, res) {
 
     if (process.env.TELEGRAM_BOT_TOKEN && process.env.TELEGRAM_CHAT_ID) {
       try {
-        const message = `🎫 Coupon Redeemed!\n\n` +
-          `Title: ${title}\n` +
-          `Details: ${details || 'No details'}\n` +
-          `Time: ${new Date().toLocaleString()}`;
+        const message = `🎫 coupon redeemed!\n\n` +
+          `title: ${title}\n` +
+          `details: ${details || 'no details'}\n` +
+          `time: ${new Date().toLocaleString()}`;
 
         await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
           method: 'POST',
@@ -82,7 +82,7 @@ export default async function handler(req, res) {
       }
     }
 
-    res.status(200).json({ success: true, message: 'Coupon redeemed successfully' });
+    res.status(200).json({ success: true, message: 'coupon redeemed successfully' });
   } catch (error) {
     console.error('Error redeeming coupon:', error);
     res.status(500).json({ error: 'Failed to redeem coupon', details: error.message });

@@ -50,7 +50,7 @@ export const CouponCard: React.FC<CouponCardProps> = ({ coupon, onRedeem }) => {
 
       <div className="mb-4">
         <div className="flex justify-between text-xs font-bold mb-1">
-          <span>Claims Left:</span>
+          <span>claims left:</span>
           <span>{coupon.maxClaims - coupon.currentClaims} / {coupon.maxClaims}</span>
         </div>
         <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden border border-gray-300">
@@ -66,7 +66,7 @@ export const CouponCard: React.FC<CouponCardProps> = ({ coupon, onRedeem }) => {
 
       {isFullyRedeemed ? (
         <div className="w-full py-3 px-6 font-bold rounded-full text-center opacity-70 border-2 border-gray-300 bg-gray-100">
-          Fully Redeemed 🚫
+          fully redeemed 🚫
         </div>
       ) : (
         <motion.button
@@ -75,7 +75,7 @@ export const CouponCard: React.FC<CouponCardProps> = ({ coupon, onRedeem }) => {
           style={{ backgroundColor: COLORS.pinkBubblegum, color: COLORS.warmGray }}
           whileTap={{ scale: 0.95 }}
         >
-          Redeem Now! ✨
+          redeem now! ✨
         </motion.button>
       )}
     </motion.div>

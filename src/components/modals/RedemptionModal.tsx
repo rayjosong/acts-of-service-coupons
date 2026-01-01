@@ -8,9 +8,10 @@ interface RedemptionModalProps {
   coupon: Coupon;
   onClose: () => void;
   onConfirm: (id: number, instructions: string) => void;
+  isRedeeming?: boolean;
 }
 
-export const RedemptionModal: React.FC<RedemptionModalProps> = ({ coupon, onClose, onConfirm }) => {
+export const RedemptionModal: React.FC<RedemptionModalProps> = ({ coupon, onClose, onConfirm, isRedeeming }) => {
   const [instructions, setInstructions] = useState('');
 
   return (
@@ -35,14 +36,14 @@ export const RedemptionModal: React.FC<RedemptionModalProps> = ({ coupon, onClos
         }}
       >
         <div className="flex justify-between items-start mb-4 border-b pb-2 border-dashed border-pink-300">
-          <h2 className="text-2xl font-extrabold">✅ Confirming: {coupon.title}</h2>
+          <h2 className="text-2xl font-extrabold">✅ confirming: {coupon.title}</h2>
           <button onClick={onClose} className="p-1 rounded-full hover:bg-pink-200 transition-colors">
             <X className="w-6 h-6" style={{ color: COLORS.warmGray }} />
           </button>
         </div>
 
         <label htmlFor="instructions" className="block text-sm font-bold mb-2">
-          📝 Any specific requests?
+          📝 any specific requests?
         </label>
         <textarea
           id="instructions"
@@ -66,15 +67,16 @@ export const RedemptionModal: React.FC<RedemptionModalProps> = ({ coupon, onClos
             style={{ borderColor: COLORS.warmGray, color: COLORS.warmGray }}
             whileTap={{ scale: 0.95 }}
           >
-            Nevermind
+            never mind
           </motion.button>
           <motion.button
             onClick={() => onConfirm(coupon.id, instructions)}
-            className="py-3 px-6 font-bold rounded-full shadow-md transition-colors"
+            disabled={isRedeeming}
+            className={`py-3 px-6 font-bold rounded-full shadow-md transition-colors ${isRedeeming ? 'opacity-50 cursor-not-allowed' : ''}`}
             style={{ backgroundColor: COLORS.pinkBubblegum, color: COLORS.warmGray }}
-            whileTap={{ scale: 0.85, rotate: 5 }}
+            whileTap={isRedeeming ? {} : { scale: 0.85, rotate: 5 }}
           >
-            Yes, please! 💪
+            {isRedeeming ? 'redeeming...' : 'yes please! 💪'}
           </motion.button>
         </div>
       </motion.div>
